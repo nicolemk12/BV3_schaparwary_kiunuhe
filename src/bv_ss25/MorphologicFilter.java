@@ -13,6 +13,7 @@ public class MorphologicFilter {
 	
 	public void copy(RasterImage src, RasterImage dst) {
 		// TODO: just copy the image
+		System.arraycopy(src.argb, 0, dst.argb, 0, src.argb.length);
 	}
 	
 	public void dilation(RasterImage src, RasterImage dst, boolean[][] kernel) {

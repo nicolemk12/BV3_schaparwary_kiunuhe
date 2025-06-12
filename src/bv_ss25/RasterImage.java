@@ -73,17 +73,45 @@ public class RasterImage {
  		   	  	 	 		
 	
 	// image point operations to be added here
-	
+
 	public void binarize(int threshold) {
 		// TODO: binarize the image with given threshold
+		for (int i = 0; i < argb.length; i++)
+		{ 	int pos = argb[i];
+			//RGB-Komponenten
+			int r = (pos >> 16) & 0xFF;
+			int g = (pos >> 8) & 0xFF;
+			int b = pos & 0xFF;
+
+			//Graustufe berechnen
+			int grey = (r + g + b)/3;
+			//Pixel auf weiss oder schwarz setzen
+			if(grey >= threshold)
+			{
+				argb[i] = 0xffffffff;
+			} else
+			{
+				argb[i] = 0xff000000;
+			}
+
+		}
 	}
-	
+
 	public void invert() {
 		// TODO: invert the image (assuming a binary image)
-	}
-	
+		for(int i = 0; i < argb.length; i++){
+			if(argb[i] == 0xff000000){
+				argb[i] = 0xffffffff;
+			}
+			else if(argb[i] == 0xffffffff){
+				argb[i] = 0xff000000;
+			}
 
- 		   	  	 	 		
+		}
+	}
+
+
+
 }
  		   	  	 	 	
 
