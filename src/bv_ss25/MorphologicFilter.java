@@ -15,12 +15,59 @@ public class MorphologicFilter {
 		// TODO: just copy the image
 		System.arraycopy(src.argb, 0, dst.argb, 0, src.argb.length);
 	}
-	
+
 	public void dilation(RasterImage src, RasterImage dst, boolean[][] kernel) {
-		// kernel's first dimension: y (row), second dimension: x (column)
-		// TODO: dilate the image using the given kernel
+		int kHeight = kernel.length;
+		int kWidth = kernel[0].length;
+		int kCenterY = kHeight / 2;
+		int kCenterX = kWidth / 2;
+
+
+		for (int i = 0; i < dst.argb.length; i++) {
+			dst.argb[i] = 0xffffffff;
+		}
+
+
+		for (int y = 0; y < src.height; y++) {
+			for (int x = 0; x < src.width; x++) {
+
+				boolean black = false;
+
+
+				for (int ky = 0; ky < kHeight && !black; ky++) {
+					for (int kx = 0; kx < kWidth && !black; kx++) {
+
+
+						int imgY = y + ky - kCenterY;
+						int imgX = x + kx - kCenterX;
+
+						// Nur wenn innerhalb des Bildes
+						if (imgY >= 0 && imgY < src.height && imgX >= 0 && imgX < src.width) {
+							int imgIndex = imgY * src.width + imgX;
+
+							boolean isBlack = src.argb[imgIndex] == 0xFF000000;
+							boolean kernelAktiv = kernel[ky][kx];
+
+							if (isBlack && kernelAktiv) {
+								black = true;
+								break;
+
+							}
+						}
+					}
+					if (black) break;
+				}
+				int dstIndex = y * dst.width + x;
+				if (black) {
+					dst.argb[dstIndex] = 0xFF000000; // Schwarz
+				} else {
+					dst.argb[dstIndex] = 0xFFFFFFFF; // Weiß
+				}
+			}
+		}
 	}
- 		   	  	 	 	
+
+
 	public void erosion(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// This is already implemented. Nothing to do.
 		// It will function once you implemented dilation and RasterImage invert()
@@ -32,15 +79,22 @@ public class MorphologicFilter {
 	
 	public void opening(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement opening by using dilation() and erosion()
+
+		// Temporäres Bild für den Zwischenstand
+		RasterImage temp = new RasterImage(src.width, src.height);
+		//Erst Erosion, dann Dilatation
+		erosion(src, temp, kernel);
+		dilation(temp, dst, kernel);
 	}
 	
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
+		RasterImage temp = new RasterImage(src.width, src.height);
+		dilation(src, temp, kernel);
+		erosion(temp, dst, kernel);
 	}
 	
-	
- 		   	  	 	 		
-	
+
 
 }
  		   	  	 	 	

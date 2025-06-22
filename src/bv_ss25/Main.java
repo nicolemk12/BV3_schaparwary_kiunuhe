@@ -30,7 +30,7 @@ public class Main extends Application {
 		primaryStage.setTitle("Morphologic Filters - SS2025 - <Your Name>"); // TODO: add your name(s)
 		primaryStage.show();
 	}
- 		   	  	 	 		
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
